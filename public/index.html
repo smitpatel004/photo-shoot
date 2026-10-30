@@ -1,6 +1,12 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Kesar Frames Studio, Rajkot: wedding films, pre-wedding shoots and wedding photography across Gujarat.">
+<style>body{margin:0}img{max-width:100%}</style>
+<script src="/defaults.js"></script>
 <title>Kesar Frames Studio</title>
-<meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Figtree:wght@300;400;500;600&family=DM+Mono:wght@400&display=swap">
 <style>
@@ -70,7 +76,11 @@ p{margin:0}
 .shot{position:relative;overflow:hidden;background:var(--ink-2);min-height:0}
 .shot canvas{position:absolute;inset:0;width:100%;height:100%;display:block;transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
 .shot figcaption,.shot .cap{position:absolute;left:12px;bottom:10px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,245,235,.85);text-shadow:0 1px 6px rgba(0,0,0,.6)}
-.shot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.shot img,.shot video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.shot video.ph{transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
+#lb-main video.ph{object-fit:contain;background:#0a0709}
+.shot[data-img] figcaption,.shot[data-vid] figcaption{display:none}
+.lb-strip .vid::after{content:"▶";position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-size:16px;text-shadow:0 1px 6px rgba(0,0,0,.7)}
 
 /* SECTIONS */
 section{padding-block:96px}
@@ -110,7 +120,7 @@ section{padding-block:96px}
 .album.wide{grid-column:span 2}
 .shot img.ph{transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
 #lb-main img.ph{object-fit:contain;background:#0a0709}
-.album:hover canvas,.album:focus-visible canvas,.album:hover img.ph,.album:focus-visible img.ph{transform:scale(1.05)}
+.album:hover canvas,.album:focus-visible canvas,.album:hover .ph,.album:focus-visible .ph{transform:scale(1.05)}
 .album .meta{position:absolute;inset:auto 0 0 0;padding:44px 16px 14px;background:linear-gradient(to top,rgba(10,6,9,.88),transparent);display:flex;justify-content:space-between;align-items:end;gap:10px}
 .album .meta h3{font-size:20px;color:#f6ede2}
 .album .meta small{display:block;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:rgba(246,237,226,.7);margin-top:4px}
@@ -237,13 +247,14 @@ html.motion .marquee-track{animation:none}
 .cursor-ring.hover{width:58px;height:58px;margin:-29px 0 0 -29px;border-color:var(--kesar)}
 @media (pointer:fine){html.motion .cursor-dot{display:block}html.motion .cursor-ring{display:grid}html.motion .album,html.motion .reel-frame{cursor:none}}
 </style>
-
+</head>
+<body>
 <div class="progress" aria-hidden="true"></div>
 <div class="cursor-ring" aria-hidden="true"><span>View</span></div>
 <div class="cursor-dot" aria-hidden="true"></div>
 <nav class="nav" aria-label="Main">
   <div class="wrap">
-    <a href="#top" class="logo"><b>Kesar Frames</b><span>Rajkot · Est. 2014</span></a>
+    <a href="#top" class="logo"><b data-field="name">Kesar Frames</b><span data-field="tagline">Rajkot · Est. 2014</span></a>
     <ul>
       <li><a href="#services">Services</a></li>
       <li><a href="#portfolio">Albums</a></li>
@@ -273,9 +284,9 @@ html.motion .marquee-track{animation:none}
     </div>
     <div class="film rise d3">
       <div class="film-frames">
-        <figure class="shot" data-scene="0" style="margin:0"><figcaption>Rann of Kutch · Pre-wedding</figcaption></figure>
-        <figure class="shot" data-scene="3" style="margin:0"><figcaption>Mandap · Pheras</figcaption></figure>
-        <figure class="shot" data-scene="2" style="margin:0"><figcaption>Sangeet night</figcaption></figure>
+        <figure class="shot" data-slot="hero1" data-scene="0" style="margin:0"><figcaption>Rann of Kutch · Pre-wedding</figcaption></figure>
+        <figure class="shot" data-slot="hero2" data-scene="3" style="margin:0"><figcaption>Mandap · Pheras</figcaption></figure>
+        <figure class="shot" data-slot="hero3" data-scene="2" style="margin:0"><figcaption>Sangeet night</figcaption></figure>
       </div>
       <span class="film-label">KF 400 · ROLL 27 →</span>
     </div>
@@ -297,25 +308,25 @@ html.motion .marquee-track{animation:none}
     </div>
     <div class="services">
       <article class="svc">
-        <div class="shot" data-scene="3"></div>
+        <div class="shot" data-slot="svc1" data-scene="3"></div>
         <h3>Wedding Films</h3>
         <p>A 4-camera cinematic edit of every ritual, with clean audio from the pheras and the speeches.</p>
         <ul><li>5–7 min highlight film</li><li>Full ceremony documentary</li><li>Drone & gimbal coverage</li><li>4K delivery in 45 days</li></ul>
-        <div class="price"><span>Starting from</span><b>₹1,45,000</b></div>
+        <div class="price"><span>Starting from</span><b data-field="price_wedding">₹1,45,000</b></div>
       </article>
       <article class="svc">
-        <div class="shot" data-scene="0"></div>
+        <div class="shot" data-slot="svc2" data-scene="0"></div>
         <h3>Pre-wedding Shoots</h3>
         <p>One full day at a location you love. Kutch salt desert, Dwarka coast, Polo Forest or a heritage palace.</p>
         <ul><li>Location scouting & permits</li><li>2 outfit changes, styling help</li><li>90-second save-the-date film</li><li>60 retouched photos</li></ul>
-        <div class="price"><span>Starting from</span><b>₹55,000</b></div>
+        <div class="price"><span>Starting from</span><b data-field="price_pre">₹55,000</b></div>
       </article>
       <article class="svc">
-        <div class="shot" data-scene="1"></div>
+        <div class="shot" data-slot="svc3" data-scene="1"></div>
         <h3>Photography & Albums</h3>
         <p>Candid and traditional photography, bound into hand-made flush-mount albums printed on lustre paper.</p>
         <ul><li>800+ edited photos</li><li>40-page 12×36 album</li><li>2 parent albums (12×18)</li><li>Online gallery for guests</li></ul>
-        <div class="price"><span>Starting from</span><b>₹95,000</b></div>
+        <div class="price"><span>Starting from</span><b data-field="price_photo">₹95,000</b></div>
       </article>
     </div>
   </div>
@@ -323,7 +334,7 @@ html.motion .marquee-track{animation:none}
 
 <section class="reel" id="reel" aria-label="Showreel">
   <div class="reel-pin">
-    <div class="reel-frame shot" data-scene="0" data-seed="42" data-cursor="Play"></div>
+    <div class="reel-frame shot" data-slot="reel" data-scene="0" data-seed="42" data-cursor="Play"></div>
     <span class="reel-time">REC 00:01:32</span>
     <div class="reel-text">
       <div class="wrap">
@@ -418,16 +429,16 @@ html.motion .marquee-track{animation:none}
 <section id="book" style="padding-top:24px">
   <div class="wrap">
     <div class="book">
-      <div class="book-bg shot" data-scene="4"></div>
+      <div class="book-bg shot" data-slot="book" data-scene="4"></div>
       <div class="book-inner">
         <div>
           <p class="eyebrow">Book now</p>
           <h2 style="margin-top:14px">Tell us your date. <em>We'll hold it for 48 hours.</em></h2>
           <div class="contact-list">
-            <div><small>Agency</small><span class="val">Kesar Frames Studio</span></div>
-            <div><small>Call or WhatsApp</small><span class="val"><span id="phone">+91 98250 47312</span><button class="copy" data-copy="phone" type="button">Copy</button></span></div>
-            <div><small>Email</small><span class="val"><span id="mail">hello@kesarframes.in</span><button class="copy" data-copy="mail" type="button">Copy</button></span></div>
-            <div><small>Studio</small><span class="val" style="font-size:17px">2nd floor, Shivam Arcade, Kalawad Road, Rajkot 360005</span></div>
+            <div><small>Agency</small><span class="val" data-field="name">Kesar Frames Studio</span></div>
+            <div><small>Call or WhatsApp</small><span class="val"><span id="phone" data-field="phone">+91 98250 47312</span><button class="copy" data-copy="phone" type="button">Copy</button></span></div>
+            <div><small>Email</small><span class="val"><span id="mail" data-field="email">hello@kesarframes.in</span><button class="copy" data-copy="mail" type="button">Copy</button></span></div>
+            <div><small>Studio</small><span class="val" style="font-size:17px" data-field="address">2nd floor, Shivam Arcade, Kalawad Road, Rajkot 360005</span></div>
           </div>
         </div>
         <form id="enq" novalidate>
@@ -449,7 +460,7 @@ html.motion .marquee-track{animation:none}
 
 <footer class="site">
   <div class="wrap">
-    <a href="#top" class="logo"><b>Kesar Frames</b><span>Rajkot</span></a>
+    <a href="#top" class="logo"><b data-field="name">Kesar Frames</b><span>Rajkot</span></a>
     <span>Weddings across Gujarat, Rajasthan & destination events · © 2026</span>
   </div>
 </footer>
@@ -537,7 +548,19 @@ function couple(g,x,b,s,pose){
 function shade(hex,p){const n=parseInt(hex.slice(1),16);let r=n>>16,gg=n>>8&255,b=n&255;const f=v=>Math.max(0,Math.min(255,Math.round(v*(1+p))));return"#"+[f(r),f(gg),f(b)].map(v=>v.toString(16).padStart(2,"0")).join("")}
 
 function renderShot(el){
-  if(el.dataset.img){            // a real photo was given: show it instead of the drawn placeholder
+  if(el.dataset.vid){            // a real video: plays muted in a loop (with controls in the album viewer)
+    el.querySelector("canvas")?.remove();el.querySelector("img.ph")?.remove();
+    let v=el.querySelector("video.ph");
+    if(!v){v=document.createElement("video");v.className="ph";v.muted=true;v.loop=true;v.playsInline=true;v.setAttribute("playsinline","");
+      if(el.dataset.thumb){v.preload="metadata"}else{v.autoplay=true;v.preload="auto"}
+      if(el.dataset.controls){v.controls=true}
+      el.prepend(v)}
+    const src=el.dataset.vid+(el.dataset.thumb?"#t=0.5":"");
+    if(v.getAttribute("src")!==src){v.src=src;if(!el.dataset.thumb)v.play().catch(()=>{})}
+    return;
+  }
+  if(el.dataset.img){
+    el.querySelector("video.ph")?.remove();            // a real photo was given: show it instead of the drawn placeholder
     const old=el.querySelector("canvas");if(old)old.remove();
     let im=el.querySelector("img.ph");
     if(!im){im=new Image();im.className="ph";im.decoding="async";el.prepend(im)}
@@ -551,31 +574,34 @@ function renderShot(el){
   cv.width=W;cv.height=H;cv.dataset.k=el.dataset.scene+"-"+(el.dataset.seed||0);
   paint(cv,+el.dataset.scene,+(el.dataset.seed||1));
 }
-function renderAll(root=document){root.querySelectorAll(".shot[data-scene],.shot[data-img]").forEach(renderShot)}
+function renderAll(root=document){root.querySelectorAll(".shot[data-scene],.shot[data-img],.shot[data-vid]").forEach(renderShot)}
+function setMedia(el,m){delete el.dataset.img;delete el.dataset.vid;if(!m||!m.url)return;if(m.type==="video")el.dataset.vid=m.url;else el.dataset.img=m.url}
 
-/* ---------- Albums ---------- */
-/* To use real photos in an album, add  cover:"photos/file.jpg"  and  photos:["photos/a.jpg","photos/b.jpg"]
-   The number of photos is then counted for you. Without them, drawn placeholders are shown. */
-const ALBUMS=[
-  {t:"Riya & Harsh",loc:"Imperial Palace, Rajkot",cat:"wedding",scene:3,n:12,size:"tall"},
-  {t:"Salt & Sunrise",loc:"Rann of Kutch",cat:"pre",scene:0,n:9,size:"wide"},
-  {t:"Haldi at Home",loc:"Gondal",cat:"ritual",scene:5,n:8},
-  {t:"Sea Vows",loc:"Dwarka coast",cat:"pre",scene:4,n:10},
-  {t:"Garba Sangeet",loc:"Jamnagar",cat:"wedding",scene:2,n:14,size:"wide"},
-  {t:"Rose Mehendi",loc:"Morbi",cat:"ritual",scene:7,n:7,size:"tall"},
-  {t:"Forest Light",loc:"Polo Forest, Idar",cat:"pre",scene:6,n:9},
-  {t:"Lantern Vidaai",loc:"Bhavnagar",cat:"wedding",scene:1,n:11},
-];
+/* ---------- Albums ----------
+   Albums come from the admin panel (/admin). An album with no photos yet shows drawn placeholders. */
+const esc=t=>String(t??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let ALBUMS=[];
+function normAlbums(list){
+  return (list||[]).map((a,i)=>{const items=(a.items||[]).filter(m=>m&&m.url);
+    return {...a,items,scene:a.scene??(i%8),n:items.length||a.n||8}});
+}
 const grid=document.getElementById("albums");
-ALBUMS.forEach((a,i)=>{
-  if(a.photos&&a.photos.length)a.n=a.photos.length;
-  const b=document.createElement("button");
-  b.className="album shot "+(a.size||"");b.dataset.scene=a.scene;b.dataset.seed=i+3;b.dataset.cat=a.cat;
-  const cover=a.cover||(a.photos&&a.photos[0]);if(cover){b.dataset.img=cover;b.dataset.alt=a.t}
-  b.setAttribute("aria-label",`Open album ${a.t}, ${a.n} photos`);
-  b.innerHTML=`<div class="meta"><div><h3>${a.t}</h3><small>${a.loc}</small></div><span class="count">${a.n} photos</span></div>`;
-  b.onclick=()=>openAlbum(i);grid.append(b);
-});
+function buildAlbums(list){
+  ALBUMS=normAlbums(list);grid.innerHTML="";
+  ALBUMS.forEach((a,i)=>{
+    const b=document.createElement("button");
+    b.className="album shot "+(a.size||"");b.dataset.scene=a.scene;b.dataset.seed=i+3;b.dataset.cat=a.cat;
+    const cover=a.items.find(m=>m.url===a.cover)||a.items.find(m=>m.type!=="video")||a.items[0];
+    if(cover){setMedia(b,cover);b.dataset.alt=a.t}
+    const word=a.items.length&&a.items.every(m=>m.type==="video")?"videos":"photos";
+    b.setAttribute("aria-label",`Open album ${a.t}, ${a.n} ${word}`);
+    b.innerHTML=`<div class="meta"><div><h3>${esc(a.t)}</h3><small>${esc(a.loc)}</small></div><span class="count">${a.n} ${word}</span></div>`;
+    b.onclick=()=>openAlbum(i);grid.append(b);
+  });
+  const active=document.querySelector('.chip[aria-pressed="true"]');
+  if(active&&active.dataset.f!=="all")grid.querySelectorAll(".album").forEach(x=>x.hidden=x.dataset.cat!==active.dataset.f);
+}
+buildAlbums((window.SITE_DEFAULTS||{}).albums);
 document.querySelectorAll(".chip").forEach(c=>c.onclick=()=>{
   document.querySelectorAll(".chip").forEach(x=>x.setAttribute("aria-pressed",x===c));
   const f=c.dataset.f;grid.querySelectorAll(".album").forEach(a=>a.hidden=!(f==="all"||a.dataset.cat===f));
@@ -590,7 +616,9 @@ function openAlbum(ai){
   document.getElementById("lb-title").textContent=a.t;
   strip.innerHTML="";
   for(let k=0;k<a.n;k++){const t=document.createElement("button");t.setAttribute("aria-label","Photo "+(k+1));
-    t.innerHTML=a.photos?`<div class="shot" data-img="${a.photos[k]}"></div>`:`<div class="shot" data-scene="${(a.scene+(k%3===2?1:0))%SCENES.length}" data-seed="${ai*31+k+1}"></div>`;
+    const m=a.items[k];
+    if(m){const d=document.createElement("div");d.className="shot"+(m.type==="video"?" vid":"");d.dataset.thumb="1";setMedia(d,m);t.append(d)}
+    else t.innerHTML=`<div class="shot" data-scene="${(a.scene+(k%3===2?1:0))%SCENES.length}" data-seed="${ai*31+k+1}"></div>`;
     t.onclick=()=>show(k);strip.append(t)}
   lb.hidden=false;document.body.style.overflow="hidden";window.__lenis&&window.__lenis.stop();
   requestAnimationFrame(()=>{renderAll(strip);show(0)});
@@ -599,14 +627,15 @@ function openAlbum(ai){
 function show(k){
   const a=ALBUMS[cur.a];cur.i=(k+a.n)%a.n;
   const src=strip.children[cur.i].querySelector(".shot");
-  if(src.dataset.img){main.dataset.img=src.dataset.img;delete main.dataset.scene}
-  else{delete main.dataset.img;main.querySelector("img.ph")?.remove();main.dataset.scene=src.dataset.scene;main.dataset.seed=src.dataset.seed}
+  main.querySelector("video.ph")?.remove();
+  if(src.dataset.img||src.dataset.vid){setMedia(main,{url:src.dataset.img||src.dataset.vid,type:src.dataset.vid?"video":"image"});delete main.dataset.scene}
+  else{delete main.dataset.img;delete main.dataset.vid;main.querySelector("img.ph")?.remove();main.dataset.scene=src.dataset.scene;main.dataset.seed=src.dataset.seed}
   renderShot(main);
   document.getElementById("lb-sub").textContent=`${a.loc} · ${cur.i+1} / ${a.n}`;
   [...strip.children].forEach((c,j)=>c.setAttribute("aria-current",j===cur.i));
   strip.children[cur.i].scrollIntoView({block:"nearest",inline:"center"});
 }
-function closeLb(){lb.hidden=true;document.body.style.overflow="";window.__lenis&&window.__lenis.start();lastFocus&&lastFocus.focus()}
+function closeLb(){main.querySelector("video.ph")?.remove();lb.hidden=true;document.body.style.overflow="";window.__lenis&&window.__lenis.start();lastFocus&&lastFocus.focus()}
 document.getElementById("lb-close").onclick=closeLb;
 document.getElementById("lb-prev").onclick=()=>show(cur.i-1);
 document.getElementById("lb-next").onclick=()=>show(cur.i+1);
@@ -634,8 +663,30 @@ function sel(el){const r=document.createRange();r.selectNodeContents(el);const s
 document.getElementById("enq").addEventListener("submit",e=>{
   e.preventDefault();const n=document.getElementById("f-name").value.trim(),p=document.getElementById("f-phone").value.trim(),note=document.getElementById("note");
   if(!n||!p){note.textContent="Please add your name and phone number so we can call you back.";return}
-  note.textContent=`Thank you, ${n.split(" ")[0]}. This is a preview form. Call +91 98250 47312 to confirm your date.`;
+  note.textContent=`Thank you, ${n.split(" ")[0]}. Please call ${BIZ.phone} to confirm your date.`;
 });
+
+/* ---------- Content from the admin panel ---------- */
+let BIZ={...((window.SITE_DEFAULTS||{}).business||{})};
+function applyContent(c){
+  if(!c)return;
+  Object.entries(c.business||{}).forEach(([k,v])=>{if(v&&String(v).trim())BIZ[k]=String(v).trim()});
+  document.querySelectorAll("[data-field]").forEach(el=>{const v=BIZ[el.dataset.field];if(v)el.textContent=v});
+  if(BIZ.name)document.title=BIZ.name+" Studio";
+  document.querySelectorAll("[data-slot]").forEach(el=>{const m=(c.slots||{})[el.dataset.slot];if(m&&m.url)setMedia(el,m)});
+  if(Array.isArray(c.albums)&&c.albums.length)buildAlbums(c.albums);
+}
+function contentReady(){
+  renderAll();
+  window.__contentReady=true;
+  if(window.__startMotion)window.__startMotion();
+}
+(function(){
+  if(location.protocol==="file:"){contentReady();return}
+  let done=false;const finish=()=>{if(!done){done=true;contentReady()}};
+  setTimeout(finish,2500);
+  fetch("/api/content",{cache:"no-store"}).then(r=>r.ok?r.json():null).then(j=>{if(!done&&j&&j.content)applyContent(j.content)}).catch(()=>{}).finally(finish);
+})();
 
 /* ---------- Boot ---------- */
 let rt;addEventListener("resize",()=>{clearTimeout(rt);rt=setTimeout(()=>renderAll(),150)});
@@ -647,6 +698,7 @@ renderAll();
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
 <script>
 (function(){
+const init=function(){
   const reduce=matchMedia("(prefers-reduced-motion: reduce)").matches;
   if(reduce||!window.gsap||!window.ScrollTrigger)return;   // page stays fully static & readable
   const se=document.scrollingElement||document.documentElement;
@@ -712,7 +764,7 @@ renderAll();
   /* --- Services: stagger in + inner image parallax --- */
   gsap.from(".svc",{y:80,opacity:0,duration:1.1,ease:"expo.out",stagger:.14,scrollTrigger:{trigger:".services",start:"top 80%"}});
   document.querySelectorAll(".svc .shot").forEach(s=>{
-    const c=s.querySelector("canvas,img.ph");if(!c)return;c.style.transition="none";
+    const c=s.querySelector("canvas,.ph");if(!c)return;c.style.transition="none";
     gsap.fromTo(c,{scale:1.3,yPercent:-8},{scale:1.05,yPercent:8,ease:"none",scrollTrigger:{trigger:s,start:"top bottom",end:"bottom top",scrub:true}});
   });
 
@@ -721,7 +773,7 @@ renderAll();
   const reelTl=gsap.timeline({scrollTrigger:{trigger:".reel-pin",start:"top top",end:"+=140%",scrub:1,pin:true,anticipatePin:1,
     onRefresh:()=>{const f=document.querySelector(".reel-frame");f&&renderShot(f)}}});
   reelTl.fromTo(".reel-frame",{clipPath:isNarrow?"inset(26% 10% 26% 10% round 6px)":"inset(22% 30% 22% 30% round 6px)"},{clipPath:"inset(0% 0% 0% 0% round 0px)",ease:"power2.inOut"})
-        .fromTo(".reel-frame canvas, .reel-frame img.ph",{scale:1.35},{scale:1,ease:"power2.inOut"},0)
+        .fromTo(".reel-frame canvas, .reel-frame .ph",{scale:1.35},{scale:1,ease:"power2.inOut"},0)
         .from(".reel-play,.reel-time",{opacity:0,y:20,stagger:.1},.55);
   let secs=92;setInterval(()=>{secs++;const t=document.querySelector(".reel-time");if(t)t.textContent="REC 00:"+String(Math.floor(secs/60)).padStart(2,"0")+":"+String(secs%60).padStart(2,"0")},1000);
 
@@ -770,7 +822,9 @@ renderAll();
 
   addEventListener("load",()=>ScrollTrigger.refresh());
   if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>ScrollTrigger.refresh());
+};
+if(window.__contentReady)init();else window.__startMotion=init;
 })();
 </script>
-
-</body></html>
+</body>
+</html>

@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<title>Studio Admin</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Marcellus&family=Figtree:wght@400;500;600&family=DM+Mono&display=swap">
+<script src="/defaults.js"></script>
+<style>
+/* Admin: same plum + saffron identity as the site, tuned for clarity and phone use */
+:root{
+  --ink:#140d12;--ink-2:#1e141b;--ink-3:#2a1d26;--line:#3a2a33;
+  --ivory:#f3e9dc;--muted:#b5a3a6;--kesar:#e8a33c;--ok:#7cc48a;--bad:#ef7b7b;
+  --f-display:"Marcellus",Georgia,serif;--f-body:"Figtree","Segoe UI",system-ui,sans-serif;--f-mono:"DM Mono",ui-monospace,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--ink);color:var(--ivory);font-family:var(--f-body);font-size:15px;line-height:1.5}
+[hidden]{display:none!important}
+a{color:inherit}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--kesar);outline-offset:2px}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);font-weight:400;margin:0;line-height:1.15}
+.eyebrow{font-family:var(--f-mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--kesar)}
+.muted{color:var(--muted)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border-radius:6px;border:1px solid var(--line);background:var(--ink-2);cursor:pointer;font-weight:500;font-size:14px;text-decoration:none;white-space:nowrap}
+.btn:hover{border-color:var(--muted)}
+.btn.primary{background:var(--kesar);border-color:var(--kesar);color:var(--ink)}
+.btn.primary:hover{filter:brightness(1.08)}
+.btn.danger{color:var(--bad);border-color:#5a2f35;background:transparent}
+.btn.small{padding:6px 10px;font-size:13px}
+.btn:disabled{opacity:.5;cursor:default}
+input[type=text],input[type=password],input[type=tel],input[type=email],select,textarea{width:100%;background:var(--ink);border:1px solid var(--line);border-radius:6px;padding:11px 12px}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--kesar)}
+label.f{display:grid;gap:6px;font-size:13px;color:var(--muted);min-width:0}
+
+/* login */
+.login{min-height:100vh;display:grid;place-items:center;padding:24px 16px}
+.login-card{width:100%;max-width:380px;background:var(--ink-2);border:1px solid var(--line);border-radius:10px;padding:32px 28px;display:grid;gap:18px}
+.login-card h1{font-size:30px}
+.err{color:var(--bad);font-size:14px;min-height:1.2em;margin:0}
+
+/* top bar */
+.top{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--ink) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.top .wrap{display:flex;align-items:center;gap:12px;padding-block:12px;flex-wrap:wrap}
+.brand{display:flex;flex-direction:column;margin-right:auto}
+.brand b{font-family:var(--f-display);font-weight:400;font-size:20px}
+.save-state{font-family:var(--f-mono);font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px}
+.save-state i{width:8px;height:8px;border-radius:50%;background:var(--ok)}
+.save-state.saving i{background:var(--kesar);animation:pulse 1s infinite}
+.save-state.error i{background:var(--bad)}
+@keyframes pulse{50%{opacity:.3}}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-top:24px;overflow-x:auto}
+.tab{background:none;border:0;padding:12px 16px;cursor:pointer;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap;font-weight:500}
+.tab[aria-selected="true"]{color:var(--ivory);border-bottom-color:var(--kesar)}
+main{padding-block:28px 120px}
+.panel-head{display:flex;justify-content:space-between;align-items:end;gap:16px;flex-wrap:wrap;margin-bottom:22px}
+.panel-head h2{font-size:30px}
+.panel-head p{margin:6px 0 0;max-width:60ch}
+
+/* albums list */
+.album-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px}
+.acard{background:var(--ink-2);border:1px solid var(--line);border-radius:8px;overflow:hidden;cursor:pointer;text-align:left;padding:0;display:flex;flex-direction:column}
+.acard:hover{border-color:var(--muted)}
+.thumb{position:relative;aspect-ratio:4/3;background:var(--ink-3);overflow:hidden}
+.thumb img,.thumb video{width:100%;height:100%;object-fit:cover;display:block}
+.thumb .ph{position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:12px;font-size:13px;color:var(--muted);background:repeating-linear-gradient(45deg,var(--ink-3) 0 10px,var(--ink-2) 10px 20px)}
+.acard .meta{padding:12px 14px;display:grid;gap:2px}
+.acard .meta b{font-weight:600}
+.badge{position:absolute;top:8px;left:8px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;padding:3px 7px;border-radius:4px;background:rgba(10,6,9,.75)}
+.badge.live{color:var(--ok)}.badge.dummy{color:var(--kesar)}
+.acard.add{border-style:dashed;align-items:center;justify-content:center;min-height:200px;color:var(--muted);font-size:15px;gap:8px}
+.acard.add span{font-size:34px;color:var(--kesar);line-height:1}
+
+/* album editor */
+.editor{display:grid;gap:22px}
+.back{background:none;border:0;color:var(--muted);cursor:pointer;padding:0;font-size:14px;justify-self:start}
+.back:hover{color:var(--ivory)}
+.fields{display:grid;grid-template-columns:2fr 2fr 1fr 1fr;gap:12px;background:var(--ink-2);border:1px solid var(--line);border-radius:8px;padding:18px}
+@media (max-width:820px){.fields{grid-template-columns:1fr 1fr}}
+@media (max-width:480px){.fields{grid-template-columns:1fr}}
+.drop{border:1.5px dashed var(--muted);border-radius:8px;padding:28px 18px;text-align:center;cursor:pointer;display:grid;gap:6px;justify-items:center;transition:all .2s;position:relative}
+.drop.over,.drop:hover{border-color:var(--kesar);background:var(--ink-2)}
+.drop b{font-family:var(--f-display);font-weight:400;font-size:22px}
+.drop input{position:absolute;width:1px;height:1px;opacity:0}
+.media-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:10px}
+.mitem{position:relative;border-radius:6px;overflow:hidden;background:var(--ink-3);border:2px solid transparent}
+.mitem.cover{border-color:var(--kesar)}
+.mitem .thumb{aspect-ratio:1}
+.mitem .bar{display:flex;gap:2px;padding:4px;background:var(--ink-2)}
+.mitem .bar button{flex:1;background:none;border:0;padding:6px 0;cursor:pointer;color:var(--muted);border-radius:4px;font-size:13px}
+.mitem .bar button:hover{background:var(--ink-3);color:var(--ivory)}
+.mitem .bar button.del:hover{color:var(--bad)}
+.mitem .kind{position:absolute;top:6px;right:6px;font-family:var(--f-mono);font-size:10px;padding:2px 6px;border-radius:3px;background:rgba(10,6,9,.75)}
+.mitem .cv{position:absolute;top:6px;left:6px;font-family:var(--f-mono);font-size:10px;padding:2px 6px;border-radius:3px;background:var(--kesar);color:var(--ink)}
+.empty-note{grid-column:1/-1;padding:22px;border:1px solid var(--line);border-radius:8px;color:var(--muted);font-size:14px}
+.danger-zone{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding-top:18px;border-top:1px solid var(--line)}
+
+/* slots */
+.slot-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.slot{background:var(--ink-2);border:1px solid var(--line);border-radius:8px;overflow:hidden;display:flex;flex-direction:column}
+.slot .thumb{aspect-ratio:16/10}
+.slot .info{padding:12px 14px;display:grid;gap:10px;flex:1}
+.slot .info b{font-weight:600}
+.slot .row{display:flex;gap:8px;margin-top:auto;flex-wrap:wrap}
+.slot .row label{cursor:pointer;position:relative}
+.slot input[type=file]{position:absolute;width:1px;height:1px;opacity:0}
+
+/* business */
+.biz{display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:820px;background:var(--ink-2);border:1px solid var(--line);border-radius:8px;padding:22px}
+.biz .full{grid-column:1/-1}
+.biz h3{grid-column:1/-1;font-size:20px;margin-top:8px}
+@media (max-width:600px){.biz{grid-template-columns:1fr}}
+
+/* upload queue */
+.queue{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));width:min(360px,calc(100vw - 32px));background:var(--ink-2);border:1px solid var(--line);border-radius:10px;box-shadow:0 12px 40px rgba(0,0,0,.5);z-index:20;overflow:hidden}
+.queue header{padding:12px 14px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;font-weight:600;font-size:14px}
+.queue ul{list-style:none;margin:0;padding:8px 14px 12px;display:grid;gap:10px;max-height:260px;overflow:auto}
+.queue li{display:grid;gap:5px;font-size:13px}
+.queue .name{display:flex;justify-content:space-between;gap:10px}
+.queue .name span:first-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.queue .track{height:4px;background:var(--ink-3);border-radius:2px;overflow:hidden}
+.queue .track i{display:block;height:100%;width:0;background:var(--kesar);transition:width .2s}
+.queue li.done .track i{background:var(--ok)}
+.queue li.fail .track i{background:var(--bad);width:100%!important}
+.queue li.fail .name span:last-child{color:var(--bad)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ivory);color:var(--ink);padding:10px 16px;border-radius:6px;font-weight:500;z-index:30;max-width:calc(100vw - 32px)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<section class="login" id="loginView">
+  <form class="login-card" id="loginForm">
+    <div>
+      <p class="eyebrow">Studio admin</p>
+      <h1 style="margin-top:8px" id="loginTitle">Log in</h1>
+    </div>
+    <label class="f">Admin password
+      <input type="password" id="pw" autocomplete="current-password" required>
+    </label>
+    <button class="btn primary" type="submit" id="loginBtn">Log in</button>
+    <p class="err" id="loginErr" role="alert"></p>
+  </form>
+</section>
+
+<!-- APP -->
+<div id="appView" hidden>
+  <header class="top">
+    <div class="wrap">
+      <div class="brand"><span class="eyebrow">Admin panel</span><b id="brandName">Studio</b></div>
+      <span class="save-state" id="saveState" role="status"><i></i><span>All changes saved</span></span>
+      <a class="btn small" href="/" target="_blank" rel="noopener">View website ↗</a>
+      <button class="btn small" id="logout" type="button">Log out</button>
+    </div>
+  </header>
+  <div class="wrap">
+    <nav class="tabs" role="tablist">
+      <button class="tab" role="tab" data-tab="albums" aria-selected="true">Albums</button>
+      <button class="tab" role="tab" data-tab="slots" aria-selected="false">Website photos</button>
+      <button class="tab" role="tab" data-tab="biz" aria-selected="false">Business details</button>
+    </nav>
+  </div>
+  <main class="wrap">
+    <section id="tab-albums"></section>
+    <section id="tab-slots" hidden></section>
+    <section id="tab-biz" hidden></section>
+  </main>
+</div>
+
+<div class="queue" id="queue" hidden><header><span id="qTitle">Uploading</span><button class="btn small" id="qClose" type="button">Hide</button></header><ul id="qList"></ul></div>
+<div class="toast" id="toast" hidden></div>
+
+<script type="module">
+const D = window.SITE_DEFAULTS;
+const $ = s => document.querySelector(s);
+const esc = t => String(t ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const CATS = { wedding: "Wedding", pre: "Pre-wedding", ritual: "Haldi & Mehendi" };
+const SIZES = { "": "Normal", tall: "Tall", wide: "Wide" };
+
+let TOKEN = "";
+try { TOKEN = localStorage.getItem("admin_token") || ""; } catch (e) {}
+let C = null;          // the content being edited
+let openId = null;     // album open in the editor
+let uploadFn = null;
+
+/* ---------- helpers ---------- */
+function toast(msg) {
+  const t = $("#toast"); t.textContent = msg; t.hidden = false;
+  clearTimeout(toast.t); toast.t = setTimeout(() => t.hidden = true, 2600);
+}
+async function api(path, opts = {}) {
+  const r = await fetch(path, { ...opts, headers: { "Content-Type": "application/json", ...(TOKEN ? { Authorization: "Bearer " + TOKEN } : {}), ...(opts.headers || {}) } });
+  const j = await r.json().catch(() => ({}));
+  if (r.status === 401) { logout("Your session ended. Please log in again."); throw new Error("401"); }
+  if (!r.ok) throw new Error(j.error || "Request failed (" + r.status + ")");
+  return j;
+}
+function mediaHTML(m, alt = "") {
+  if (!m || !m.url) return "";
+  return m.type === "video"
+    ? `<video src="${esc(m.url)}#t=0.5" muted playsinline preload="metadata"></video>`
+    : `<img src="${esc(m.url)}" alt="${esc(alt)}" loading="lazy">`;
+}
+const uid = () => "a" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+
+/* ---------- login ---------- */
+$("#loginForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const btn = $("#loginBtn"); btn.disabled = true; $("#loginErr").textContent = "";
+  try {
+    const r = await fetch("/api/login", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ password: $("#pw").value }) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(j.error || "Could not log in");
+    TOKEN = j.token; try { localStorage.setItem("admin_token", TOKEN); } catch (e) {}
+    await start();
+  } catch (err) { $("#loginErr").textContent = err.message; }
+  btn.disabled = false;
+});
+function logout(msg) {
+  TOKEN = ""; try { localStorage.removeItem("admin_token"); } catch (e) {}
+  $("#appView").hidden = true; $("#loginView").hidden = false; $("#pw").value = "";
+  $("#loginErr").textContent = msg || "";
+}
+$("#logout").onclick = () => logout();
+
+/* ---------- load ---------- */
+async function start() {
+  try { await api("/api/login"); } catch (e) { return; }
+  const j = await api("/api/content", { headers: { "Cache-Control": "no-store" } }).catch(e => { if (e.message !== "401") toast(e.message); return {}; });
+  const c = j.content || {};
+  C = {
+    business: { ...Object.fromEntries(Object.keys(D.business).map(k => [k, ""])), ...(c.business || {}) },
+    slots: { ...(c.slots || {}) },
+    albums: (Array.isArray(c.albums) && c.albums.length ? c.albums : D.albums).map(a => ({ ...a, items: a.items || [] }))
+  };
+  $("#loginView").hidden = true; $("#appView").hidden = false;
+  renderAll();
+  try { uploadFn = (await import("/admin/blob-client.js")).upload; } catch (e) { toast("Upload tool failed to load. Refresh the page."); }
+}
+function renderAll() { renderAlbums(); renderSlots(); renderBiz(); $("#brandName").textContent = C.business.name || D.business.name; }
+
+/* ---------- autosave ---------- */
+let saveTimer = null, saving = false, again = false;
+function setState(kind, text) { const s = $("#saveState"); s.className = "save-state " + kind; s.querySelector("span").textContent = text; }
+function changed() { setState("saving", "Saving…"); clearTimeout(saveTimer); saveTimer = setTimeout(save, 900); }
+async function save() {
+  if (saving) { again = true; return; }
+  saving = true;
+  try {
+    await api("/api/content", { method: "PUT", body: JSON.stringify({ content: C }) });
+    setState("", "All changes saved · live on website");
+  } catch (e) { if (e.message !== "401") setState("error", "Not saved: " + e.message); }
+  saving = false;
+  if (again) { again = false; save(); }
+}
+addEventListener("beforeunload", e => { if (saving || saveTimer && $("#saveState").classList.contains("saving")) { e.preventDefault(); e.returnValue = ""; } });
+
+/* ---------- tabs ---------- */
+document.querySelectorAll(".tab").forEach(t => t.onclick = () => {
+  document.querySelectorAll(".tab").forEach(x => x.setAttribute("aria-selected", x === t));
+  ["albums", "slots", "biz"].forEach(n => $("#tab-" + n).hidden = n !== t.dataset.tab);
+  if (t.dataset.tab === "albums") { openId = null; renderAlbums(); }
+});
+
+/* ---------- uploads ---------- */
+const queue = $("#queue"), qList = $("#qList");
+$("#qClose").onclick = () => queue.hidden = true;
+let active = 0;
+function qTitle() { $("#qTitle").textContent = active ? `Uploading ${active} file${active > 1 ? "s" : ""}…` : "Uploads finished"; }
+
+async function shrinkImage(file) {
+  // Big camera photos are resized to 2400px on the long side so the website stays fast.
+  if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return file;
+  try {
+    const bmp = await createImageBitmap(file);
+    const max = 2400, scale = Math.min(1, max / Math.max(bmp.width, bmp.height));
+    if (scale === 1 && file.size < 1.8e6) return file;
+    const cv = document.createElement("canvas");
+    cv.width = Math.round(bmp.width * scale); cv.height = Math.round(bmp.height * scale);
+    cv.getContext("2d").drawImage(bmp, 0, 0, cv.width, cv.height);
+    const blob = await new Promise(r => cv.toBlob(r, "image/jpeg", 0.86));
+    return blob ? new File([blob], file.name.replace(/\.\w+$/, "") + ".jpg", { type: "image/jpeg" }) : file;
+  } catch (e) { return file; }
+}
+
+async function uploadFiles(files, folder) {
+  if (!uploadFn) { toast("Upload tool is still loading. Try again in a moment."); return []; }
+  const list = [...files].filter(f => /^(image|video)\//.test(f.type));
+  if (!list.length) { toast("Choose photos or videos (JPG, PNG, WEBP, MP4, MOV)."); return []; }
+  queue.hidden = false;
+  const results = [];
+  // three at a time
+  let idx = 0;
+  async function worker() {
+    while (idx < list.length) {
+      const f = list[idx++];
+      const li = document.createElement("li");
+      li.innerHTML = `<div class="name"><span>${esc(f.name)}</span><span>0%</span></div><div class="track"><i></i></div>`;
+      qList.prepend(li); active++; qTitle();
+      const pct = li.querySelector(".name span:last-child"), bar = li.querySelector("i");
+      try {
+        const isVideo = f.type.startsWith("video/");
+        const file = isVideo ? f : await shrinkImage(f);
+        const safe = file.name.toLowerCase().replace(/[^a-z0-9.\-]+/g, "-").slice(-60);
+        const blob = await uploadFn(`media/${folder}/${safe}`, file, {
+          access: "public",
+          handleUploadUrl: "/api/upload",
+          clientPayload: TOKEN,
+          multipart: file.size > 20e6,
+          onUploadProgress: p => { bar.style.width = p.percentage + "%"; pct.textContent = Math.round(p.percentage) + "%"; }
+        });
+        li.classList.add("done"); pct.textContent = "Done"; bar.style.width = "100%";
+        results.push({ url: blob.url, type: isVideo ? "video" : "image", name: f.name });
+      } catch (e) {
+        li.classList.add("fail"); pct.textContent = "Failed";
+        li.title = e.message;
+        if (/log in/i.test(e.message)) logout("Your session ended. Please log in again.");
+      }
+      active--; qTitle();
+    }
+  }
+  await Promise.all([worker(), worker(), worker()]);
+  return results;
+}
+
+function wireDrop(el, input, onFiles) {
+  ["dragenter", "dragover"].forEach(ev => el.addEventListener(ev, e => { e.preventDefault(); el.classList.add("over"); }));
+  ["dragleave", "drop"].forEach(ev => el.addEventListener(ev, e => { e.preventDefault(); el.classList.remove("over"); }));
+  el.addEventListener("drop", e => onFiles(e.dataTransfer.files));
+  input.addEventListener("change", () => { const f = [...input.files]; input.value = ""; onFiles(f); });
+}
+
+/* ---------- albums ---------- */
+function renderAlbums() {
+  const root = $("#tab-albums");
+  if (openId) return renderEditor();
+  root.innerHTML = `
+    <div class="panel-head">
+      <div><h2>Albums</h2><p class="muted">These appear in the Portfolio section of your website. An album without photos shows the sample pictures until you add your own.</p></div>
+    </div>
+    <div class="album-grid" id="albumGrid"></div>`;
+  const g = $("#albumGrid");
+  C.albums.forEach(a => {
+    const cover = a.items.find(m => m.url === a.cover) || a.items.find(m => m.type !== "video") || a.items[0];
+    const b = document.createElement("button");
+    b.className = "acard"; b.type = "button";
+    b.innerHTML = `<div class="thumb">${cover ? mediaHTML(cover, a.t) : `<div class="ph">Sample pictures showing</div>`}
+      <span class="badge ${a.items.length ? "live" : "dummy"}">${a.items.length ? a.items.length + " on website" : "Sample"}</span></div>
+      <div class="meta"><b>${esc(a.t || "Untitled album")}</b><span class="muted">${esc(a.loc || "")} · ${CATS[a.cat] || ""}</span></div>`;
+    b.onclick = () => { openId = a.id; renderAlbums(); scrollTo(0, 0); };
+    g.append(b);
+  });
+  const add = document.createElement("button");
+  add.className = "acard add"; add.type = "button";
+  add.innerHTML = `<span>+</span>New album`;
+  add.onclick = () => {
+    const a = { id: uid(), t: "New album", loc: "", cat: "wedding", size: "", scene: C.albums.length % 8, items: [] };
+    C.albums.unshift(a); changed(); openId = a.id; renderAlbums();
+  };
+  g.prepend(add);
+}
+
+function renderEditor() {
+  const a = C.albums.find(x => x.id === openId);
+  if (!a) { openId = null; return renderAlbums(); }
+  const root = $("#tab-albums");
+  root.innerHTML = `
+    <div class="editor">
+      <button class="back" type="button" id="back">← All albums</button>
+      <div class="panel-head" style="margin:0"><div><p class="eyebrow">Editing album</p><h2 style="margin-top:6px">${esc(a.t || "Untitled album")}</h2></div></div>
+      <div class="fields">
+        <label class="f">Album name<input type="text" id="e-t" value="${esc(a.t)}" placeholder="Riya & Harsh"></label>
+        <label class="f">Place<input type="text" id="e-loc" value="${esc(a.loc)}" placeholder="Rajkot"></label>
+        <label class="f">Category<select id="e-cat">${Object.entries(CATS).map(([k, v]) => `<option value="${k}" ${a.cat === k ? "selected" : ""}>${v}</option>`).join("")}</select></label>
+        <label class="f">Tile shape<select id="e-size">${Object.entries(SIZES).map(([k, v]) => `<option value="${k}" ${(a.size || "") === k ? "selected" : ""}>${v}</option>`).join("")}</select></label>
+      </div>
+      <label class="drop" id="e-drop" for="e-file">
+        <b>Add photos or videos</b>
+        <span class="muted">Drag files here or tap to choose · you can pick many at once</span>
+        <input type="file" id="e-file" accept="image/*,video/*" multiple>
+      </label>
+      <div class="media-grid" id="e-media"></div>
+      <div class="danger-zone">
+        <button class="btn danger" type="button" id="e-del">Delete this album</button>
+        <span class="muted" id="e-del-note"></span>
+      </div>
+    </div>`;
+  $("#back").onclick = () => { openId = null; renderAlbums(); };
+  const bind = (id, key) => $(id).addEventListener("input", e => { a[key] = e.target.value; changed(); });
+  bind("#e-t", "t"); bind("#e-loc", "loc"); bind("#e-cat", "cat"); bind("#e-size", "size");
+  wireDrop($("#e-drop"), $("#e-file"), async files => {
+    const added = await uploadFiles(files, a.id);
+    if (added.length) { a.items.push(...added); changed(); renderMedia(a); toast(`${added.length} added to “${a.t}”`); }
+  });
+  let armed = false;
+  $("#e-del").onclick = () => {
+    if (!armed) { armed = true; $("#e-del").textContent = "Yes, delete album and its files"; $("#e-del-note").textContent = "Click again to confirm."; setTimeout(() => { armed = false; const b = $("#e-del"); if (b) { b.textContent = "Delete this album"; $("#e-del-note").textContent = ""; } }, 5000); return; }
+    C.albums = C.albums.filter(x => x.id !== a.id); changed(); openId = null; renderAlbums(); toast("Album deleted");
+  };
+  renderMedia(a);
+}
+
+function renderMedia(a) {
+  const g = $("#e-media"); if (!g) return;
+  g.innerHTML = "";
+  if (!a.items.length) { g.innerHTML = `<div class="empty-note">No photos yet, so the website shows sample pictures for this album. Add your photos or videos above.</div>`; return; }
+  const coverUrl = (a.items.find(m => m.url === a.cover) || a.items.find(m => m.type !== "video") || a.items[0]).url;
+  a.items.forEach((m, i) => {
+    const d = document.createElement("div");
+    d.className = "mitem" + (m.url === coverUrl ? " cover" : "");
+    d.innerHTML = `<div class="thumb">${mediaHTML(m)}</div>
+      ${m.type === "video" ? `<span class="kind">VIDEO</span>` : ""}${m.url === coverUrl ? `<span class="cv">COVER</span>` : ""}
+      <div class="bar">
+        <button type="button" title="Move left" aria-label="Move left" data-a="l">←</button>
+        <button type="button" title="Use as cover" aria-label="Use as album cover" data-a="c">★</button>
+        <button type="button" title="Move right" aria-label="Move right" data-a="r">→</button>
+        <button type="button" class="del" title="Remove" aria-label="Remove from album" data-a="x">✕</button>
+      </div>`;
+    d.querySelector(".bar").onclick = e => {
+      const act = e.target.dataset.a; if (!act) return;
+      if (act === "l" && i > 0) [a.items[i - 1], a.items[i]] = [a.items[i], a.items[i - 1]];
+      if (act === "r" && i < a.items.length - 1) [a.items[i + 1], a.items[i]] = [a.items[i], a.items[i + 1]];
+      if (act === "c") a.cover = m.url;
+      if (act === "x") { a.items.splice(i, 1); if (a.cover === m.url) delete a.cover; }
+      changed(); renderMedia(a);
+    };
+    g.append(d);
+  });
+}
+
+/* ---------- website photos (slots) ---------- */
+function renderSlots() {
+  const root = $("#tab-slots");
+  root.innerHTML = `
+    <div class="panel-head"><div><h2>Website photos</h2><p class="muted">Pictures used around your homepage. Until you upload one, the sample picture stays in its place. Videos play silently on loop.</p></div></div>
+    <div class="slot-grid" id="slotGrid"></div>`;
+  const g = $("#slotGrid");
+  D.slots.forEach(s => {
+    const m = C.slots[s.id];
+    const d = document.createElement("div");
+    d.className = "slot";
+    d.innerHTML = `<div class="thumb">${m ? mediaHTML(m, s.label) : `<div class="ph">Sample picture showing</div>`}
+        <span class="badge ${m ? "live" : "dummy"}">${m ? (m.type === "video" ? "Your video" : "Your photo") : "Sample"}</span></div>
+      <div class="info"><b>${esc(s.label)}</b><span class="muted" style="font-size:13px">${esc(s.hint)}</span>
+        <div class="row">
+          <label class="btn small primary">${m ? "Replace" : "Upload"}<input type="file" accept="image/*,video/*"></label>
+          ${m ? `<button class="btn small danger" type="button" data-reset>Use sample again</button>` : ""}
+        </div></div>`;
+    d.querySelector("input").addEventListener("change", async e => {
+      const files = [...e.target.files]; e.target.value = "";
+      const [up] = await uploadFiles(files, "site-" + s.id);
+      if (up) { C.slots[s.id] = up; changed(); renderSlots(); toast(s.label + " updated"); }
+    });
+    const r = d.querySelector("[data-reset]");
+    if (r) r.onclick = () => { delete C.slots[s.id]; changed(); renderSlots(); };
+    g.append(d);
+  });
+}
+
+/* ---------- business details ---------- */
+function renderBiz() {
+  const B = C.business, P = D.business;
+  const f = (k, label, type = "text", full = false) =>
+    `<label class="f${full ? " full" : ""}">${label}<input type="${type}" data-k="${k}" value="${esc(B[k])}" placeholder="${esc(P[k])}"></label>`;
+  $("#tab-biz").innerHTML = `
+    <div class="panel-head"><div><h2>Business details</h2><p class="muted">Shown on your website. Leave a box empty to keep the sample text shown in grey.</p></div></div>
+    <div class="biz">
+      ${f("name", "Agency name")}${f("tagline", "Short line under the name")}
+      ${f("phone", "Phone / WhatsApp", "tel")}${f("email", "Email", "email")}
+      ${f("address", "Studio address", "text", true)}
+      <h3>Starting prices</h3>
+      ${f("price_wedding", "Wedding Films")}${f("price_pre", "Pre-wedding Shoots")}
+      ${f("price_photo", "Photography & Albums")}
+    </div>`;
+  $("#tab-biz").querySelectorAll("input").forEach(i => i.addEventListener("input", () => {
+    B[i.dataset.k] = i.value; changed();
+    if (i.dataset.k === "name") $("#brandName").textContent = i.value || D.business.name;
+  }));
+}
+
+/* ---------- boot ---------- */
+if (TOKEN) start(); else $("#pw").focus();
+</script>
+</body>
+</html>
